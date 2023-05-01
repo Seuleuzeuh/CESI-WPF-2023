@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33617.297
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CESI_WPF_2023", "src\CESI_WPF_2023.csproj", "{0CE377D4-82E7-4ED6-8983-48D5AB0BA54A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{820ECF8A-8F04-49C3-A466-942E70DEF874}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0CE377D4-82E7-4ED6-8983-48D5AB0BA54A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CE377D4-82E7-4ED6-8983-48D5AB0BA54A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CE377D4-82E7-4ED6-8983-48D5AB0BA54A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CE377D4-82E7-4ED6-8983-48D5AB0BA54A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {569CA73D-42D6-445D-BC1F-2CB2334A5CED}
+	EndGlobalSection
+EndGlobal
