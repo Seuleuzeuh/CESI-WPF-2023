@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 
-namespace PokedexApp.Helpers
+namespace CESI_WPF_2023.Helpers
 {
     public enum ContinueOnCapturedContextValues
     {
