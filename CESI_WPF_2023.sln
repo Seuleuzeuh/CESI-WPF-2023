@@ -7,6 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CESI_WPF_2023", "src\CESI_W
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{820ECF8A-8F04-49C3-A466-942E70DEF874}"
 	ProjectSection(SolutionItems) = preProject
+		NotifySnippet.snippet = NotifySnippet.snippet
 		README.md = README.md
 	EndProjectSection
 EndProject
