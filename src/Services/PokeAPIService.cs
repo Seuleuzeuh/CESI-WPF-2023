@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System;
+using System.Net;
+using System.Configuration;
 
 namespace PokedexApp.Services
 {
@@ -25,6 +28,8 @@ namespace PokedexApp.Services
 
         private PokeAPIService()
         {
+            ServicePointManager.ServerCertificateValidationCallback +=
+    (sender, cert, chain, sslPolicyErrors) => true;
             _pokeClient = new PokeApiClient();
         }
 
@@ -121,10 +126,11 @@ namespace PokedexApp.Services
         {
             var species = await LoadResourceAsync(speciesRessource);
             var pokemon = await SearchPokemonByNumberAsync(species.Id);
-
+   
             string imageUrl = await GetPokemonImageUrlAsync(pokemon);
             IEnumerable<string?> typeNames = await GetPokemonTypeNamesAsync(pokemon);
             string name = GetPokemonName(species);
+            
             var simplePokemon = new SimplePokemonModel(pokemon.Id, name, imageUrl, typeNames.ToList());
             return simplePokemon;
         }
@@ -157,7 +163,11 @@ namespace PokedexApp.Services
             {
                 return await _pokeClient.GetResourceAsync<Pokemon>(pokeNumber);
             }
-            catch (HttpRequestException)
+            catch (HttpRequestException ex)
+            {
+                return null;
+            }
+            catch(Exception ex)
             {
                 return null;
             }

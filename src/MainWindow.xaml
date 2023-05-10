@@ -1,18 +1,206 @@
 ﻿<Window x:Class="CESI_WPF_2023.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:converters="clr-namespace:CESI_WPF_2023.Converters"
+        xmlns:core="clr-namespace:CESI_WPF_2023.Core"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:fa="http://schemas.fontawesome.com/icons/svg"
         xmlns:local="clr-namespace:CESI_WPF_2023"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:models="clr-namespace:CESI_WPF_2023.Models"
         Title="MainWindow"
         Width="800"
         Height="450"
+        d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
         mc:Ignorable="d">
-    <Grid>
-        <TextBlock HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                   FontSize="25"
-                   FontWeight="Bold"
-                   Text="Bienvenue étudiant.e du CESI" />
-    </Grid>
+    <Window.Resources>
+        <SolidColorBrush x:Key="ErrorColor"
+                         Color="green" />
+        <converters:StringIsEmptyToVisibilityConverter x:Key="StringIsEmptyToVisibilityConverter" />
+        <converters:ItemToItemsConverter x:Key="ItemToItemsConverter" />
+
+        <!--<Style x:Key="LabelStyle"
+               TargetType="TextBlock">
+            <Style.Setters>
+                <Setter Property="FontSize"
+                        Value="18" />
+                <Setter Property="Background"
+                        Value="{StaticResource ErrorColor}" />
+            </Style.Setters>
+        </Style>-->
+
+        <DataTemplate x:Key="pokemonModel"
+                      DataType="models:SimplePokemonModel">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock Style="{StaticResource LabelStyle}"
+                           Text="Nom" />
+                <TextBox Grid.Column="1"
+                         FontSize="25"
+                         FontWeight="Bold"
+                         Text="{Binding Name,
+                                        Mode=OneWay}" />
+                <TextBlock Grid.Row="1"
+                           Style="{StaticResource LabelStyle}"
+                           Text="Descriptif" />
+                <TextBlock Grid.Row="1"
+                           Grid.Column="1"
+                           Text="{Binding Description}" />
+                <Image Grid.Row="2"
+                       Grid.ColumnSpan="2"
+                       Source="{Binding ImageUrl}" />
+                <Button Click="ButtonAfficherDetail"
+                        Content="Voir le détail" />
+            </Grid>
+        </DataTemplate>
+    </Window.Resources>
+    <DockPanel>
+        <StackPanel x:Name="panelDresseur"
+                    Width="200"
+                    DockPanel.Dock="Right"
+                    Orientation="Vertical">
+            <TextBlock Style="{StaticResource LabelStyle}"
+                       Text="Nom du dresseur :" />
+            <!--  Si ViewModel  -->
+            <!--  core:ValidationTextBoxBehavior.ErrorBackgroundColor="Red"  -->
+            <TextBox core:ValidationTextBoxBehavior.ErrorBackgroundColor="Red"
+                     Text="{Binding Dresseur.Entity.Nom}" />
+            <!-- Si MainWindow : <TextBox Text="{Binding Entity.Nom}" /> -->
+            <Button Click="ButtonEnregistrerClick"
+                    Content="Enregistrer" />
+            <Button Click="ChangeDynamicResource"
+                    Content="Changer la couleur du hover" />
+        </StackPanel>
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackPanel Margin="0,0,50,0"
+                        Orientation="Horizontal">
+                <fa:SvgAwesome Height="15"
+                               Icon="Solid_MagnifyingGlass" />
+                <Grid Width="180">
+                    <local:WatermarkTextBox x:Name="monChampDeRecherche"
+                                            Text="{Binding SearchText,
+                                                           UpdateSourceTrigger=PropertyChanged}"
+                                            Watermark="Saisir le numéro" />
+                    <!--<TextBox x:Name="monChampDeRecherche"
+                             Text="{Binding SearchText,
+                                            UpdateSourceTrigger=PropertyChanged}" />-->
+                    <!--<TextBlock Foreground="Gray"
+                               IsHitTestVisible="False"
+                               Text="Saisissez un numéro de pokemon"
+                               Visibility="{Binding SearchText,
+                                                    Converter={StaticResource StringIsEmptyToVisibilityConverter}}" />-->
+                </Grid>
+            </StackPanel>
+            <Button Grid.Column="1"
+                    Command="{Binding RechercheCommand}"
+                    Content="Rechercher"
+                    Visibility="Collapsed" />
+            <Button Grid.Column="1"
+                    Command="{Binding RechercheCommand}">
+                <Button.Content>
+                    <TextBlock Text="Rechercher" />
+                </Button.Content>
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <ContentPresenter Cursor="Hand" />
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+            <Grid x:Name="pokemonDetailGrid"
+                  Grid.Row="1"
+                  Grid.ColumnSpan="4"
+                  DataContext="{Binding Resultat}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock Style="{StaticResource LabelStyle}"
+                           Text="Nom" />
+                <TextBox Grid.Column="1"
+                         FontSize="25"
+                         FontWeight="Bold"
+                         Text="{Binding Name,
+                                        Mode=OneWay}" />
+                <TextBlock Grid.Row="1"
+                           Style="{StaticResource LabelStyle}"
+                           Text="Descriptif" />
+                <TextBlock Grid.Row="1"
+                           Grid.Column="1"
+                           Text="{Binding Description}" />
+                <Image Grid.Row="2"
+                       Grid.ColumnSpan="2"
+                       Source="{Binding ImageUrl}" />
+                <Button x:Name="buttonDetail"
+                        Click="ButtonAfficherDetail"
+                        Content="Voir le détail" />
+            </Grid>
+        </Grid>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <ListView x:Name="pokemonsList"
+                      SelectionChanged="pokemonsList_SelectionChanged">
+                <ListView.ItemTemplate>
+                    <DataTemplate DataType="{x:Type models:SimplePokemonModel}">
+                        <Border Background="LightGray">
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock HorizontalAlignment="Center"
+                                           Text="{Binding Name}" />
+                                <Image Source="{Binding ImageUrl}" />
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="4" />
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+            </ListView>
+            <DataGrid x:Name="dataGrid"
+                      Grid.Row="1"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Number}"
+                                        Header="#" />
+                    <DataGridTextColumn Binding="{Binding Name}"
+                                        Header="Nom" />
+                    <DataGridTemplateColumn Header="Image">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image Source="{Binding ImageUrl}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </DockPanel>
 </Window>

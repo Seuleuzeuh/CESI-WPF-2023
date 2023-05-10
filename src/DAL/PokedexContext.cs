@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CESI_WPF_2023.DAL
 {
@@ -15,7 +16,7 @@ namespace CESI_WPF_2023.DAL
         {
             var folder = Environment.SpecialFolder.LocalApplicationData;
             var path = Environment.GetFolderPath(folder);
-            DbPath = System.IO.Path.Join(path, "pokedex.db");
+            DbPath = System.IO.Path.Join(path, "pokedexv2.db");
         }
 
         // The following configures EF to create a Sqlite database file in the
@@ -34,6 +35,7 @@ namespace CESI_WPF_2023.DAL
 
     public class PokemonData
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int PokemonDataId { get; set; }
         public string Commentaire { get; set; }
         public PokemonDataState State { get; set; }
