@@ -22,7 +22,7 @@ namespace CESI_WPF_2023.Models
 
     public class SimplePokemonModel : BindableObject
     {
-        public SimplePokemonModel(int number, string name, string imageUrl, List<string> types)
+        public SimplePokemonModel(int number, string? name, string imageUrl, List<string?> types)
         {
             Number = number;
             Name = name;

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace PokedexApp.Services
+namespace CESI_WPF_2023.Services
 {
     internal class PokeAPIService
     {

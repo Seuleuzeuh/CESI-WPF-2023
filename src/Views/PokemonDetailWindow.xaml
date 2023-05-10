@@ -1,0 +1,184 @@
+﻿<Window x:Class="CESI_WPF_2023.Views.PokemonDetailWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:converters="clr-namespace:CESI_WPF_2023.Converters"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:fa="http://schemas.fontawesome.com/icons/svg"
+        xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:models="clr-namespace:CESI_WPF_2023.Models"
+        xmlns:s="clr-namespace:System;assembly=netstandard"
+        xmlns:vm="clr-namespace:CESI_WPF_2023.ViewModels"
+        Title="{Binding Pokemon.Name,
+                        StringFormat='{}Informations sur {0}'}"
+        Width="800"
+        Height="450"
+        d:DataContext="{d:DesignInstance Type=vm:PokemonDetailViewModel}"
+        mc:Ignorable="d">
+
+    <Window.Resources>
+        <converters:ItemToItemsConverter x:Key="ItemToItemsConverter" />
+        <converters:TypeToIconConverter x:Key="TypeToIconConverter" />
+        <converters:TypeToColorConverter x:Key="TypeToColorConverter" />
+        <converters:PokemonStateToStringConverter x:Key="StateConverter" />
+        <DataTemplate DataType="{x:Type models:Evolution}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="100" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Image Grid.Row="0"
+                       Grid.Column="0"
+                       Grid.ColumnSpan="2"
+                       Source="{Binding Pokemon.ImageUrl}" />
+                <TextBlock Grid.Row="1"
+                           Text="{Binding Pokemon.Number,
+                                          StringFormat='N°{0}'}" />
+                <TextBlock Grid.Row="1"
+                           Grid.Column="1"
+                           Text="{Binding Pokemon.Name}" />
+                <ListView Grid.Row="2"
+                          Grid.ColumnSpan="2"
+                          Padding="0"
+                          BorderThickness="0"
+                          ItemsSource="{Binding Evolutions}">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Focusable"
+                                    Value="false" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                </ListView>
+            </Grid>
+        </DataTemplate>
+    </Window.Resources>
+    <DockPanel>
+        <Grid DockPanel.Dock="Top">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Image Width="100"
+                   Height="100"
+                   Source="{Binding Pokemon.ImageUrl}" />
+            <StackPanel Grid.Column="1"
+                        VerticalAlignment="Center"
+                        Orientation="Vertical">
+                <TextBlock Grid.Column="1"
+                           FontWeight="Bold"
+                           Text="{Binding Pokemon.Name}" />
+                <TextBlock Grid.Column="1"
+                           FontWeight="SemiBold"
+                           Text="{Binding Pokemon.Number,
+                                          StringFormat='{}#{0}'}" />
+            </StackPanel>
+            <TextBlock Grid.Column="2"
+                       Margin="50,0,50,0"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"
+                       Text="{Binding Pokemon.Description}"
+                       TextWrapping="Wrap" />
+            <StackPanel Grid.Column="3"
+                        Orientation="Vertical">
+                <TextBlock Text="{Binding PokemonData.Entity.State,
+                                          StringFormat='Status : {0}'}">
+                    <TextBlock.Style>
+                        <Style BasedOn="{StaticResource {x:Type TextBlock}}"
+                               TargetType="TextBlock">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding PokemonData.Entity.State}"
+                                             Value="0">
+                                    <Setter Property="Background"
+                                            Value="Gray" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding PokemonData.Entity.State}"
+                                             Value="1">
+                                    <Setter Property="Background"
+                                            Value="Yellow" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding PokemonData.Entity.State}"
+                                             Value="2">
+                                    <Setter Property="Background"
+                                            Value="Green" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Status" />
+                    <ComboBox SelectedItem="{Binding PokemonData.Entity.State,
+                                                     Converter={StaticResource StateConverter}}">
+                        <ComboBox.Items>
+                            <s:String>Inconnu</s:String>
+                            <s:String>Vu</s:String>
+                            <s:String>Capture</s:String>
+                        </ComboBox.Items>
+                    </ComboBox>
+                </StackPanel>
+
+                <TextBox Text="{Binding PokemonData.Entity.Commentaire}" />
+                <Button Command="{Binding SavePokemonCommand}"
+                        Content="Save" />
+            </StackPanel>
+            <ListBox Grid.Column="4"
+                     ItemsSource="{Binding Pokemon.Types}">
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Background="{Binding .,
+                                                         Converter={StaticResource TypeToColorConverter}}"
+                                    Orientation="Horizontal">
+                            <fa:SvgAwesome Height="15"
+                                           Margin="0,0,5,0"
+                                           Icon="{Binding .,
+                                                          Converter={StaticResource TypeToIconConverter}}" />
+                            <TextBlock Text="{Binding .}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+        <Grid DockPanel.Dock="Right">
+            <ListView Padding="0"
+                      BorderThickness="0"
+                      FocusVisualStyle="{x:Null}"
+                      ItemContainerStyle="{x:Null}"
+                      ItemsSource="{Binding Pokemon.Evolution,
+                                            Converter={StaticResource ItemToItemsConverter}}">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+            </ListView>
+        </Grid>
+        <Grid>
+            <lvc:CartesianChart Series="{Binding Series}"
+                                XAxes="{Binding XAxes}"
+                                YAxes="{Binding YAxes}" />
+        </Grid>
+    </DockPanel>
+</Window>
