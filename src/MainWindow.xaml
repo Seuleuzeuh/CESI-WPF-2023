@@ -1,18 +1,223 @@
 ﻿<Window x:Class="CESI_WPF_2023.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:converters="clr-namespace:CESI_WPF_2023.Converters"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:fa="http://schemas.fontawesome.com/icons/svg"
         xmlns:local="clr-namespace:CESI_WPF_2023"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        Title="MainWindow"
-        Width="800"
-        Height="450"
+        Title="Pokédex"
+        Width="1044"
+        Height="734"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ResizeMode="CanResizeWithGrip"
+        WindowStyle="None"
         mc:Ignorable="d">
+    <Window.Resources>
+        <converters:StringIsEmptyToVisibilityConverter x:Key="StringIsEmptyToVisibilityConverter" />
+    </Window.Resources>
     <Grid>
-        <TextBlock HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                   FontSize="25"
-                   FontWeight="Bold"
-                   Text="Bienvenue étudiant.e du CESI" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="17.44*" />
+            <RowDefinition Height="82.56*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="47.0958*" />
+            <ColumnDefinition Width="5.8084*" />
+            <ColumnDefinition Width="47.0958*" />
+        </Grid.ColumnDefinitions>
+        <Viewbox Grid.RowSpan="2"
+                 Grid.ColumnSpan="3"
+                 Stretch="Uniform">
+            <Canvas Width="1274"
+                    Height="900">
+                <Rectangle Width="600"
+                           Height="900"
+                           Fill="#f90403" />
+                <Path Width="600"
+                      Height="157"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Top"
+                      Cursor="Hand"
+                      Data="M0,0 L600,0 600,82.308794 426.16315,91.152926 353.27271,157.47599 0,154.37966 z"
+                      Fill="DarkRed"
+                      MouseLeftButtonDown="Path_MouseLeftButtonDown"
+                      Stretch="Fill" />
+                <Path Canvas.Left="674"
+                      Canvas.Top="82"
+                      Width="600"
+                      Height="818"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Center"
+                      Data="M600,0 L600,817.93999 0,817.93999 0,71.853027 353.2727,74.939987 426.16314,8.8173981 z"
+                      Fill="#f90403"
+                      RenderTransformOrigin="0.49999999627471,-0.00435241322489346"
+                      Stretch="Fill">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleX="-1" />
+                            <SkewTransform />
+                            <RotateTransform />
+                            <TranslateTransform />
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+                <Rectangle Canvas.Left="600"
+                           Canvas.Top="82"
+                           Width="74"
+                           Height="818"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Top">
+                    <Rectangle.Fill>
+                        <LinearGradientBrush StartPoint="0,0"
+                                             EndPoint="1,0">
+                            <GradientStop Offset="0.05"
+                                          Color="#f90403" />
+                            <GradientStop Offset="0.5"
+                                          Color="DarkRed" />
+                            <GradientStop Offset="0.95"
+                                          Color="#f90403" />
+                        </LinearGradientBrush>
+                    </Rectangle.Fill>
+                </Rectangle>
+            </Canvas>
+        </Viewbox>
+
+        <Grid IsHitTestVisible="False">
+            <TextBlock Margin="150,0,0,0"
+                       VerticalAlignment="Center"
+                       FontSize="40"
+                       FontWeight="SemiBold"
+                       Foreground="White"
+                       Text="Pokédex" />
+        </Grid>
+
+        <Grid Grid.Row="1"
+              Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <StackPanel HorizontalAlignment="Center"
+                        VerticalAlignment="Top"
+                        Orientation="Horizontal">
+                <fa:SvgAwesome Width="10"
+                               Height="10"
+                               Margin="10,0"
+                               Icon="Solid_MagnifyingGlass" />
+                <local:WatermarkTextBox x:Name="searchTextBox"
+                                        Width="300"
+                                        Watermark="Nom ou Numéro du pokemon" />
+                <!--<Grid>
+                    <TextBox x:Name="searchTextBox"
+                             Width="300" />
+                    <TextBlock Margin="5,0,0,0"
+                               IsHitTestVisible="False"
+                               Text="Nom ou Numéro du pokemon"
+                               Visibility="{Binding Text,
+                                                    ElementName=searchTextBox,
+                                                    Converter={StaticResource StringIsEmptyToVisibilityConverter}}" />
+                </Grid>-->
+                <Button Margin="10,0,0,0"
+                        Command="{Binding SearchCommand}"
+                        CommandParameter="{Binding Text,
+                                                   ElementName=searchTextBox}"
+                        Content="Voir le pokémon"
+                        IsDefault="True" />
+            </StackPanel>
+
+            <TabControl Grid.Row="1"
+                        Margin="0,20,0,0"
+                        Background="Transparent">
+                <TabItem Header="Liste">
+                    <ListView x:Name="listViewCOntent"
+                              Background="Transparent"
+                              BorderThickness="0"
+                              ItemsSource="{Binding Pokemons}"
+                              SelectedItem="{Binding SelectedPokemon}"
+                              SelectionMode="Single">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="3" />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Border Padding="5"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Stretch"
+                                        Background="LightGray"
+                                        CornerRadius="5">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="100" />
+                                            <RowDefinition Height="20" />
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="30" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Image Grid.Row="0"
+                                               Grid.Column="0"
+                                               Grid.ColumnSpan="2"
+                                               Source="{Binding ImageUrl}" />
+                                        <TextBlock Grid.Row="1"
+                                                   FontSize="16"
+                                                   Text="{Binding Number,
+                                                                  StringFormat='#{0}'}" />
+                                        <TextBlock Grid.Row="1"
+                                                   Grid.Column="1"
+                                                   FontSize="16"
+                                                   Text="{Binding Name}" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </TabItem>
+                <TabItem Header="Grille">
+                    <DataGrid AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              ItemsSource="{Binding Pokemons}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Number}"
+                                                Header="#" />
+                            <DataGridTextColumn Binding="{Binding Name}"
+                                                Header="Nom" />
+                            <DataGridTemplateColumn Header="Image">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Image Source="{Binding ImageUrl}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </TabItem>
+            </TabControl>
+            <Button Grid.Row="2"
+                    Command="{Binding LoadMoreCommand}"
+                    Content="Charger plus de pokemon" />
+        </Grid>
+
+        <Grid Grid.Row="1"
+              Grid.Column="2"
+              Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <TextBlock Foreground="White"
+                       Text="Information du dresseur" />
+            <TextBox Grid.Row="1"
+                     Text="{Binding Dresseur.Entity.Nom}" />
+            <Button Grid.Row="2"
+                    VerticalAlignment="Bottom"
+                    Command="{Binding SaveDresseurCommand}"
+                    Content="Sauvegarder" />
+        </Grid>
     </Grid>
 </Window>

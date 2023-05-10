@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using PokeApiNet;
+using CESI_WPF_2023.Models;
+using CESI_WPF_2023.Services;
+using CESI_WPF_2023.ViewModels;
+using CESI_WPF_2023.Views;
+using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Windows.Media.Animation;
 
 namespace CESI_WPF_2023
 {
@@ -20,9 +15,25 @@ namespace CESI_WPF_2023
     /// </summary>
     public partial class MainWindow : Window
     {
+        public MainViewModel ViewModel { get; }
+
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = ViewModel = new MainViewModel();
+        }
+
+        private void searchTextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if(e.Key == System.Windows.Input.Key.Enter)
+            {
+                ViewModel.SearchCommand.Execute(searchTextBox.Text);
+            }
+        }
+
+        private void Path_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            DragMove();
         }
     }
 }
